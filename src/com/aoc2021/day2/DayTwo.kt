@@ -1,7 +1,6 @@
 package com.aoc2021.day2
 
-import java.nio.file.Files
-import java.nio.file.Paths
+import com.aoc2021.util.Utils.Companion.readFileAsMutableList
 
 class DayTwo {
   companion object {
@@ -14,7 +13,7 @@ class DayTwo {
       var depth = 0
       var horizontalPosition = 0
 
-      val inputLines: MutableList<String> = Files.readAllLines(Paths.get("./src/com/aoc2021/day2/Input"))
+      val inputLines = readFileAsMutableList("day2/Input")
 
       for (line: String in inputLines) {
         val instruction = line.split(" ")
@@ -38,7 +37,7 @@ class DayTwo {
       var depth = 0
       var horizontalPosition = 0
 
-      val inputLines: MutableList<String> = Files.readAllLines(Paths.get("./src/com/aoc2021/day2/Input"))
+      val inputLines: MutableList<String> = readFileAsMutableList("day2/Input")
 
       for (line: String in inputLines) {
         val instruction = line.split(" ")
