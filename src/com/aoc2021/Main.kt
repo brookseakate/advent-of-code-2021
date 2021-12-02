@@ -1,5 +1,5 @@
-import com.aoc2021.day1.DayOne
+import com.aoc2021.day2.DayTwo
 
 fun main() {
-  println(DayOne.partOne())
+  DayTwo.main()
 }
