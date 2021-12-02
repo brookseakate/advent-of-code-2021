@@ -2,13 +2,13 @@ package com.aoc2021.day2
 
 import com.aoc2021.util.Utils.Companion.readFileAsMutableList
 
-class DayTwo {
+class Day2 {
   companion object {
     fun main() {
-      println(partTwo())
+      println(part2())
     }
 
-    private fun partTwo(): Int {
+    private fun part2(): Int {
       var aim = 0
       var depth = 0
       var horizontalPosition = 0
@@ -33,7 +33,7 @@ class DayTwo {
       return depth * horizontalPosition
     }
 
-    private fun partOne(): Int {
+    private fun part1(): Int {
       var depth = 0
       var horizontalPosition = 0
 

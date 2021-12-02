@@ -3,9 +3,9 @@ package com.aoc2021.day1
 import java.nio.file.Files
 import java.nio.file.Paths
 
-class DayOne {
+class Day1 {
   companion object {
-    fun partTwo() {
+    fun part2() {
       var increases = 0
 
       try {
@@ -41,7 +41,7 @@ class DayOne {
       println(increases)
     }
 
-    fun partOne() {
+    fun part1() {
       var increases = 0
 
       try {
