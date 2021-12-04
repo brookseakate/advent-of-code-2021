@@ -22,12 +22,9 @@ class Day4 {
 
       input.removeFirst() // remove next line (empty string)
 
-      val boards: MutableList<Board> = mutableListOf()
-
       // get boards
-      while (input.isNotEmpty()) {
-        val board: Board = input
-          .takeWhile { it.isNotEmpty() }
+      val boards: List<Board> = input.chunked(6) { list ->
+        list.takeWhile { it.isNotEmpty() }
           .let { stringList ->
             stringList
               .map { string ->
@@ -41,9 +38,6 @@ class Day4 {
                   }
               }
           }
-
-        boards.add(board)
-        input.removeFirst() // remove next line (empty string)
       }
 
       for (drawValue in draws) {
@@ -65,7 +59,7 @@ class Day4 {
 
     private fun processDraw(
       drawValue: Int,
-      boards: MutableList<Board>,
+      boards: List<Board>,
     ): Board? /* Returns winning board, if any */ {
       for (board in boards) {
         markBoard(
