@@ -18,12 +18,38 @@ class Day4 {
 
     fun partOne(): Int {
       val input = readFileAsMutableList("day4/Input")
-      val draws: List<Int> = input.removeFirst().split(",").map { it.toInt() }
 
+      // get draws
+      val draws: List<Int> = input.removeFirst().split(",").map { it.toInt() }
       input.removeFirst() // remove next line (empty string)
 
       // get boards
-      val boards: List<Board> = input.chunked(6) { list ->
+      val boards: List<Board> = readInputToBoards(input)
+
+      // process draws
+      for (drawValue in draws) {
+        // mark boards and check for win
+        val winningBoard = processDraw(
+          drawValue = drawValue,
+          boards = boards
+        )
+
+        // if win, calculate & return score
+        if (winningBoard != null) {
+          return calculateScore(
+            board = winningBoard,
+            drawValue = drawValue
+          )
+        }
+      }
+
+      throw RuntimeException("You oopsed, no winner here")
+    }
+
+    private fun readInputToBoards(
+      input: MutableList<String>,
+    ): List<Board> {
+      return input.chunked(6) { list ->
         list.takeWhile { it.isNotEmpty() }
           .let { stringList ->
             stringList
@@ -39,22 +65,6 @@ class Day4 {
               }
           }
       }
-
-      for (drawValue in draws) {
-        val winningBoard = processDraw(
-          drawValue = drawValue,
-          boards = boards
-        )
-
-        if (winningBoard != null) {
-          return calculateScore(
-            board = winningBoard,
-            drawValue = drawValue
-          )
-        }
-      }
-
-      throw RuntimeException("You oopsed, no winner here")
     }
 
     private fun processDraw(
@@ -78,13 +88,10 @@ class Day4 {
     private fun markBoard(
       drawValue: Int,
       board: Board,
-//    ): Board /* Return this board as a new board so we don't have to handle mutable lists everywhere */{
     ) {
-//      val updatedBoard = board
       board
         .map { row ->
           row.map {
-            // TODO: prob need to apply this / return as updated board
             if (it.value == drawValue) {
               it.marked = true
             }
