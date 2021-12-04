@@ -18,7 +18,7 @@ class Day4 {
 
     fun partOne(): Int {
       val input = readFileAsMutableList("day4/Input")
-      val draws = input.removeFirst()
+      val draws: List<Int> = input.removeFirst().split(",").map { it.toInt() }
 
       input.removeFirst() // remove next line (empty string)
 
@@ -33,6 +33,7 @@ class Day4 {
               .map { string ->
                 string
                   .split(" ")
+                  .filter { it.isNotEmpty() }
                   .map {
                     Square(
                       value = it.toInt()
@@ -45,18 +46,87 @@ class Day4 {
         input.removeFirst() // remove next line (empty string)
       }
 
-      // process draws
-        // mark board squares
-        // check for win
-          // if yes:
-            // save winning board
-            // save draw value
+      for (drawValue in draws) {
+        val winningBoard = processDraw(
+          drawValue = drawValue,
+          boards = boards
+        )
 
-      // calculate score - input winning board, draw value
-        // sum unmarked numbers
-        // * draw value
+        if (winningBoard != null) {
+          return calculateScore(
+            board = winningBoard,
+            drawValue = drawValue
+          )
+        }
+      }
 
-      // return score
+      throw RuntimeException("You oopsed, no winner here")
+    }
+
+    private fun processDraw(
+      drawValue: Int,
+      boards: MutableList<Board>,
+    ): Board? /* Returns winning board, if any */ {
+      for (board in boards) {
+        markBoard(
+          drawValue = drawValue,
+          board = board
+        )
+
+        if (board.hasWon()) {
+          return board
+        }
+      }
+
+      return null
+    }
+
+    private fun markBoard(
+      drawValue: Int,
+      board: Board,
+//    ): Board /* Return this board as a new board so we don't have to handle mutable lists everywhere */{
+    ) {
+//      val updatedBoard = board
+      board
+        .map { row ->
+          row.map {
+            // TODO: prob need to apply this / return as updated board
+            if (it.value == drawValue) {
+              it.marked = true
+            }
+          }
+        }
+    }
+
+    private fun Board.hasWon(): Boolean {
+      for (row in this) {
+        if (row.all { it.marked }) {
+          return true
+        }
+      }
+
+      val rowSize = this.first().size
+      for (index in 0 until rowSize) {
+        val column = this.map { row ->
+          row[index]
+        }
+
+        if (column.all { it.marked }) {
+          return true
+        }
+      }
+
+      return false
+    }
+
+    private fun calculateScore(
+      board: Board,
+      drawValue: Int,
+    ): Int {
+      return drawValue * board
+        .flatten()
+        .filter { !it.marked }
+        .sumOf { it.value }
     }
   }
 }
