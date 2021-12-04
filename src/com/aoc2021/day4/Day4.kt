@@ -13,7 +13,38 @@ data class Square(
 class Day4 {
   companion object {
     fun main() {
-      println(partOne())
+      println(partTwo())
+    }
+
+    // TODO: DRY all up (BoardProcessor interface)
+    fun partTwo(): Int {
+      val input = readFileAsMutableList("day4/Input")
+
+      // get draws
+      val draws: List<Int> = input.removeFirst().split(",").map { it.toInt() }
+      input.removeFirst() // remove next line (empty string)
+
+      // get boards
+      val boards: MutableList<Board> = readInputToBoards(input).toMutableList()
+
+      // process draws
+      for (drawValue in draws) {
+        // mark boards and check for win
+        val lastWinningBoard = processDrawAndReturnLastWin(
+          drawValue = drawValue,
+          boards = boards
+        )
+
+        // if win, calculate & return score
+        if (lastWinningBoard != null) {
+          return calculateScore(
+            board = lastWinningBoard,
+            drawValue = drawValue
+          )
+        }
+      }
+
+      throw RuntimeException("You oopsed, no winner here")
     }
 
     fun partOne(): Int {
@@ -29,7 +60,7 @@ class Day4 {
       // process draws
       for (drawValue in draws) {
         // mark boards and check for win
-        val winningBoard = processDraw(
+        val winningBoard = processDrawAndReturnFirstWin(
           drawValue = drawValue,
           boards = boards
         )
@@ -67,7 +98,35 @@ class Day4 {
       }
     }
 
-    private fun processDraw(
+    private fun processDrawAndReturnLastWin(
+      drawValue: Int,
+      boards: MutableList<Board>,
+    ): Board? /* Returns last-winning board */ {
+      var winningBoards = mutableListOf<Board>()
+
+      for (board in boards) {
+        markBoard(
+          drawValue = drawValue,
+          board = board
+        )
+
+        if (board.hasWon()) {
+          winningBoards.add(board) // can't modify boards in-line while being accessed, so handle in 2 steps like this
+        }
+      }
+
+      for (win in winningBoards) {
+        if (boards.size > 1) {
+          boards.remove(win)
+        } else {
+          return win
+        }
+      }
+
+      return null
+    }
+
+    private fun processDrawAndReturnFirstWin(
       drawValue: Int,
       boards: List<Board>,
     ): Board? /* Returns winning board, if any */ {
