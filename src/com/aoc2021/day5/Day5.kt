@@ -14,13 +14,15 @@ data class Coordinate(
 
 class Day5 {
   companion object {
-    val field = MutableList(1000) { MutableList(1000) { 0 } }
+    private val field = MutableList(1000) { MutableList(1000) { 0 } }
+//    private val field = MutableList(10) { MutableList(10) { 0 } }
 
     fun main() {
-      val input = readFileAsMutableList("day5/ExampleInput")
+      val input = readFileAsMutableList("day5/Input")
+//      val input = readFileAsMutableList("day5/ExampleInput")
       val coordinates: List<Coordinate> = readInputAsCoordinates(input)
-      println("input line count: ${input.size}")
-      println("coordinate count: ${coordinates.size}")
+//      println("input line count: ${input.size}")
+//      println("coordinate count: ${coordinates.size}")
 
       println(partOne(coordinates))
 //      println(partTwo(inputs))
@@ -31,16 +33,30 @@ class Day5 {
     ): Int {
       for (c in coordinates) {
         if (c.one.x == c.two.x) {
-          for (y in c.one.y..c.two.y) {
-            field[y][c.one.x]++
+          if (c.one.y <= c.two.y) {
+            for (y in c.one.y..c.two.y) {
+              field[y][c.one.x]++
+            }
+          } else if (c.one.y > c.two.y) {
+            for (y in c.one.y downTo c.two.y) {
+              field[y][c.one.x]++
+            }
           }
+
         } else if (c.one.y == c.two.y) {
-          for (x in c.one.x..c.two.x) {
-            field[c.one.y][x]++
+          if (c.one.x <= c.two.x) {
+            for (x in c.one.x..c.two.x) {
+              field[c.one.y][x]++
+            }
+          } else if (c.one.x > c.two.x) {
+            for (x in c.one.x downTo c.two.x) {
+              field[c.one.y][x]++
+            }
           }
         }
       }
 
+//      println("Final field: $field")
       return field.flatten().filter { it >= 2 }.size
     }
 
@@ -52,7 +68,7 @@ class Day5 {
           .split(",", " -> ")
           .map { it.toInt() }
 
-        if (pieces.any { it > 999}) {
+        if (pieces.any { it > 999 }) {
           throw RuntimeException("Nope, need a bigger field. At least: $it")
         }
 
