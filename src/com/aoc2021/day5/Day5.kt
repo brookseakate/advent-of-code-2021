@@ -15,16 +15,12 @@ data class Coordinate(
 class Day5 {
   companion object {
     private val field = MutableList(1000) { MutableList(1000) { 0 } }
-//    private val field = MutableList(10) { MutableList(10) { 0 } }
 
     fun main() {
       val input = readFileAsMutableList("day5/Input")
-//      val input = readFileAsMutableList("day5/ExampleInput")
       val coordinates: List<Coordinate> = readInputAsCoordinates(input)
-//      println("input line count: ${input.size}")
-//      println("coordinate count: ${coordinates.size}")
 
-      println(partOne(coordinates))
+//      println(partOne(coordinates))
       println(partTwo(coordinates))
     }
 
@@ -69,7 +65,6 @@ class Day5 {
         }
       }
 
-//      println("Final field: ${fieldToString(field)}")
       return field.flatten().filter { it >= 2 }.size
     }
 
@@ -110,7 +105,6 @@ class Day5 {
         }
       }
 
-//      println("Final field: $field")
       return field.flatten().filter { it >= 2 }.size
     }
 
