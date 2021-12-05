@@ -25,7 +25,61 @@ class Day5 {
 //      println("coordinate count: ${coordinates.size}")
 
       println(partOne(coordinates))
-//      println(partTwo(inputs))
+      println(partTwo(coordinates))
+    }
+
+    private fun partTwo(
+      coordinates: List<Coordinate>
+    ): Int {
+      for (c in coordinates) {
+        val yProgression = if (c.one.y <= c.two.y) {
+          c.one.y..c.two.y
+        } else {
+          c.one.y downTo c.two.y
+        }
+
+        val xProgression = if (c.one.x <= c.two.x) {
+          c.one.x..c.two.x
+        } else {
+          c.one.x downTo c.two.x
+        }
+
+        if (c.one.x == c.two.x) {
+          for (y in yProgression) {
+            field[y][c.one.x]++
+          }
+        } else if (c.one.y == c.two.y) {
+          for (x in xProgression) {
+            field[c.one.y][x]++
+          }
+        } else {
+          val xProgressionList = xProgression.toList()
+
+          if (yProgression.toList().size != xProgressionList.size) {
+            throw RuntimeException("Bug! Progression lengths don't match. " +
+              "y: $yProgression, yLength: ${yProgression.toList().size}," +
+              "x: $xProgression, xProgressionList: $xProgressionList, xLength: ${xProgressionList.size}")
+          }
+
+          var xIndex = 0
+          for (y in yProgression) {
+            field[y][xProgressionList[xIndex]]++
+            xIndex++
+          }
+        }
+      }
+
+//      println("Final field: ${fieldToString(field)}")
+      return field.flatten().filter { it >= 2 }.size
+    }
+
+    private fun fieldToString(
+      field: MutableList<MutableList<Int>>
+    ): String {
+      return "[\n" + field.map {
+        "$it\n"
+      } +
+        "]"
     }
 
     private fun partOne(
