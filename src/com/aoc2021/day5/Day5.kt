@@ -33,25 +33,25 @@ class Day5 {
     ): Int {
       for (c in coordinates) {
         if (c.one.x == c.two.x) {
-          if (c.one.y <= c.two.y) {
-            for (y in c.one.y..c.two.y) {
-              field[y][c.one.x]++
-            }
-          } else if (c.one.y > c.two.y) {
-            for (y in c.one.y downTo c.two.y) {
-              field[y][c.one.x]++
-            }
+          val yProgression = if (c.one.y <= c.two.y) {
+            c.one.y..c.two.y
+          } else {
+            c.one.y downTo c.two.y
+          }
+
+          for (y in yProgression) {
+            field[y][c.one.x]++
           }
 
         } else if (c.one.y == c.two.y) {
-          if (c.one.x <= c.two.x) {
-            for (x in c.one.x..c.two.x) {
-              field[c.one.y][x]++
-            }
-          } else if (c.one.x > c.two.x) {
-            for (x in c.one.x downTo c.two.x) {
-              field[c.one.y][x]++
-            }
+          val xProgression = if (c.one.x <= c.two.x) {
+            c.one.x..c.two.x
+          } else {
+            c.one.x downTo c.two.x
+          }
+
+          for (x in xProgression) {
+            field[c.one.y][x]++
           }
         }
       }
