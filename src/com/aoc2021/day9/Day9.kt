@@ -7,8 +7,8 @@ class Day9 {
     private lateinit var caveFloor: List<List<Int>>
 
     fun main() {
-//      val input = Utils.readFileAsMutableList("day9/Input")
-      val input = Utils.readFileAsMutableList("day9/ExampleInput")
+      val input = Utils.readFileAsMutableList("day9/Input")
+//      val input = Utils.readFileAsMutableList("day9/ExampleInput")
 
       caveFloor = readInputToCaveFloor(input)
       println(partOne())
@@ -19,32 +19,43 @@ class Day9 {
 
       for ((rowIndex, row) in caveFloor.withIndex()) {
         for ((pointIndex, point) in row.withIndex()) {
-          var isLowPoint = false
+          // assume this is a low point – if proven otherwise, move on to next point
 
           if (pointIndex > 0) {
-            isLowPoint = row[pointIndex - 1] > point
+            // if left is smaller than point, false
+            if (row[pointIndex - 1] <= point) {
+              continue
+            }
           }
 
           if (pointIndex < row.lastIndex) {
-            isLowPoint = row[pointIndex + 1] > point
+            // if right is smaller than point, false
+            if (row[pointIndex + 1] <= point) {
+              continue
+            }
           }
 
           if (rowIndex > 0) {
-            isLowPoint = caveFloor[rowIndex - 1][pointIndex] > point
+            // if above is smaller than point, false
+            if (caveFloor[rowIndex - 1][pointIndex] <= point) {
+              continue
+            }
           }
 
           if (rowIndex < caveFloor.lastIndex) {
-            isLowPoint = caveFloor[rowIndex + 1][pointIndex] > point
+            // if below is smaller than point, false
+            if (caveFloor[rowIndex + 1][pointIndex] <= point) {
+              continue
+            }
           }
 
-          if (isLowPoint) {
-            lowPoints += point
-          }
+          // if we got here, true
+          lowPoints += point
         }
-
       }
-      println("count: ${lowPoints.size}")
-      println("points: $lowPoints")
+
+//      println("count: ${lowPoints.size}")
+//      println("points: $lowPoints")
       return lowPoints.sum() + lowPoints.size
     }
 
