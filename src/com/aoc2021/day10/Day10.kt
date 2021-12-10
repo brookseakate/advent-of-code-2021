@@ -33,7 +33,22 @@ class Day10 {
 //      val input = readFileAsMutableList("day10/ExampleInput")
       val lines = input.map { it.toCharArray() }
 
-      println(partOne(lines))
+      println(partTwo(lines))
+    }
+
+    private fun partTwo(
+      lines: List<CharArray>
+    ): Int {
+      val lineScores = mutableListOf<Int>()
+      // for each line:
+      // - get completion string
+      // -- use part one (ignore line if syntax error)
+      // -- after line is iterated, pop each remaining to construct completion string
+      // - get completion string score
+      // - add to lineScores
+
+      // sort linesScores
+      return lineScores[lineScores.size/2 + 1]
     }
 
     private fun partOne(
