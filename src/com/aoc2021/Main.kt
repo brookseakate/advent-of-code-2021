@@ -1,5 +1,5 @@
-import com.aoc2021.day9.Day9
+import com.aoc2021.day10.Day10
 
 fun main() {
-  Day9.main()
+  Day10.main()
 }
