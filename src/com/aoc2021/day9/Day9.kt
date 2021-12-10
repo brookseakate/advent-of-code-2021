@@ -15,25 +15,37 @@ class Day9 {
     }
 
     private fun partOne(): Int {
-      var lowPointCount = 0
+      val lowPoints = mutableListOf<Int>()
 
       for ((rowIndex, row) in caveFloor.withIndex()) {
         for ((pointIndex, point) in row.withIndex()) {
-            try {
-              if (
-                row[pointIndex - 1] < point &&
-                  row[pointIndex + 1] < point &&
-                  caveFloor[rowIndex - 1][pointIndex] < point &&
-                  caveFloor[rowIndex + 1][pointIndex] < point
-              ) {
-                lowPointCount++
-              }
-            } catch (oob: IndexOutOfBoundsException) {
-              continue
-            }
+          var isLowPoint = false
+
+          if (pointIndex > 0) {
+            isLowPoint = row[pointIndex - 1] > point
+          }
+
+          if (pointIndex < row.lastIndex) {
+            isLowPoint = row[pointIndex + 1] > point
+          }
+
+          if (rowIndex > 0) {
+            isLowPoint = caveFloor[rowIndex - 1][pointIndex] > point
+          }
+
+          if (rowIndex < caveFloor.lastIndex) {
+            isLowPoint = caveFloor[rowIndex + 1][pointIndex] > point
+          }
+
+          if (isLowPoint) {
+            lowPoints += point
+          }
         }
+
       }
-      return lowPointCount
+      println("count: ${lowPoints.size}")
+      println("points: $lowPoints")
+      return lowPoints.sum() + lowPoints.size
     }
 
     private fun readInputToCaveFloor(
