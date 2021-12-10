@@ -1,6 +1,7 @@
 package com.aoc2021.day10
 
 import com.aoc2021.day10.Day10.Companion.Brace.Companion.getByCloseBrace
+import com.aoc2021.day10.Day10.Companion.Brace.Companion.getByOpenBrace
 import com.aoc2021.util.Utils.Companion.readFileAsMutableList
 
 typealias Stack = MutableList<Char>
@@ -10,12 +11,13 @@ class Day10 {
     private enum class Brace(
       val open: Char,
       val close: Char,
-      val score: Int
+      val syntaxErrorScore: Int,
+      val autocompleteScore: Int,
     ) {
-      Round('(', ')', 3),
-      Square('[', ']', 57),
-      Curly('{', '}', 1197),
-      Angle('<', '>', 25137);
+      Round('(', ')', 3, 1),
+      Square('[', ']', 57, 2),
+      Curly('{', '}', 1197, 3),
+      Angle('<', '>', 25137, 4);
 
       companion object {
         fun getByOpenBrace(openBrace: Char): Brace {
@@ -38,17 +40,56 @@ class Day10 {
 
     private fun partTwo(
       lines: List<CharArray>
-    ): Int {
-      val lineScores = mutableListOf<Int>()
+    ): Long {
+      val lineScores = mutableListOf<Long>()
       // for each line:
       // - get completion string
       // -- use part one (ignore line if syntax error)
-      // -- after line is iterated, pop each remaining to construct completion string
-      // - get completion string score
-      // - add to lineScores
+      line@ for (line in lines) {
+        var stack = mutableListOf<Char>()
+
+        for (char in line) {
+          if (char in Brace.values().map { it.open }) {
+            stack.add(char)
+          } else {
+            val thisBrace = getByCloseBrace(char)
+            val poppedOpenBrace = stack.removeLast()
+
+            if (poppedOpenBrace != thisBrace.open) {
+              // syntax error!
+              continue@line
+            }
+          }
+        }
+
+        // -- after line is iterated, pop each remaining to construct completion string
+        var completionString = ""
+        for (brace in stack.reversed()) {
+          completionString += getByOpenBrace(brace).close
+        }
+
+        // - get completion string score
+        // - add to lineScores
+        lineScores.add(getCompletionStringScore(completionString))
+      }
 
       // sort linesScores
-      return lineScores[lineScores.size/2 + 1]
+      lineScores.sort()
+
+      // return middle
+      return lineScores[lineScores.size/2]
+    }
+
+    private fun getCompletionStringScore(
+      completionString: String
+    ): Long {
+      var score = 0L
+      for (char in completionString) {
+        score *= 5L
+        score += getByCloseBrace(char).autocompleteScore
+      }
+
+      return score
     }
 
     private fun partOne(
@@ -68,7 +109,7 @@ class Day10 {
 
             if (poppedOpenBrace != thisBrace.open) {
               // syntax error!
-              score += thisBrace.score
+              score += thisBrace.syntaxErrorScore
               break
             }
           }
